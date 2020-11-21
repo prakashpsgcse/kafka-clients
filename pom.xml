@@ -5,4 +5,17 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>kafka-clients</name>
   <description>Kafka producer and consumer with and configs</description>
+  <properties>
+   <maven.compiler.source>1.8</maven.compiler.source>
+   <maven.compiler.target>1.8</maven.compiler.target>
+ </properties>
+  <dependencies>
+  <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+<dependency>
+    <groupId>org.apache.kafka</groupId>
+    <artifactId>kafka-clients</artifactId>
+    <version>2.2.0</version>
+</dependency>
+  
+  </dependencies>
 </project>
