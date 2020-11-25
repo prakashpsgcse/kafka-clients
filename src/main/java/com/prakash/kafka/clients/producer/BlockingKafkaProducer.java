@@ -5,10 +5,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.clients.producer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,12 +17,13 @@ public class BlockingKafkaProducer {
 	private static final Logger logger
 			= LoggerFactory.getLogger(BlockingKafkaProducer.class);
     public static void main(String args[]) {
-
-		ProducerWithResponse();
+		//SimpleProducer();
+		//ProducerWithResponse();
+		ProducerWithCallback();
     }
 
     public static void SimpleProducer(){
-		logger.debug("Starting kafka producer");
+		logger.info("Starting kafka producer");
 		Properties producerPros = new Properties();
 		producerPros.put("bootstrap.servers", "localhost:9092");
 		producerPros.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -33,11 +31,11 @@ public class BlockingKafkaProducer {
 		Producer<String, String> producer = new KafkaProducer<>(producerPros);
 		ProducerRecord<String,String> message=new ProducerRecord<>("prakash-kafka-clients","key-from-app","value from app");
 		producer.send(message);
-		logger.debug("closig producer");
+		logger.info("closig producer");
 		producer.close();
 	}
 	public static void ProducerWithResponse(){
-		logger.debug("Starting kafka producer");
+		logger.info("Starting kafka producer");
 		Properties producerPros = new Properties();
 		producerPros.put("bootstrap.servers", "localhost:9092");
 		producerPros.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -49,13 +47,49 @@ public class BlockingKafkaProducer {
 		while(!brokerResponse.isDone()){
 			logger.debug("Record is added to batch .Waiting for batch to picked by I/O thread to send and received ack from broker");
 		}
-		logger.debug("ACK received from broker");
+		logger.info("ACK received from broker");
 		try {
-			System.out.println("Message published to partition : {} and Offset: {} "+brokerResponse.get().offset()+brokerResponse.get().partition());
-
-			logger.debug("Message published to partition : {} and Offset: {} ",brokerResponse.get().offset(),brokerResponse.get().partition());
+			logger.info("Message published to partition : {} and Offset: {} ",brokerResponse.get().offset(),brokerResponse.get().partition());
 		} catch (InterruptedException|ExecutionException e) {
-			e.printStackTrace();
+			logger.error("Not able to publish message to kafka {}",e.getMessage());
+		}
+		logger.debug("closig producer");
+		producer.close();
+	}
+
+	public static void ProducerWithCallback(){
+		logger.info("Starting kafka producer");
+		Properties producerPros = new Properties();
+		producerPros.put("bootstrap.servers", "localhost:9092");
+		producerPros.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		producerPros.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		Producer<String, String> producer = new KafkaProducer<>(producerPros);
+		ProducerRecord<String,String> message=new ProducerRecord<>("prakash-kafka-clients","key-from-app","value from app");
+		Future<RecordMetadata> brokerResponse=producer.send(message, new Callback() {
+			{
+				System.out.println("Instance init block : Call back registered");
+			}
+			@Override
+			public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+				Logger logger
+						= LoggerFactory.getLogger(BlockingKafkaProducer.class);
+				if(null==e) {
+					logger.info("Callback: Received ACK from broker");
+					logger.info("Callback: Message published to partition : {} and Offset: {} ", recordMetadata.offset(), recordMetadata.partition());
+				}else{
+					logger.error("Callback: Not able to publish message to kafka {}",e.getMessage());
+				}
+			}
+		});
+
+		while(!brokerResponse.isDone()){
+			logger.debug("Record is added to batch .Waiting for batch to picked by I/O thread to send and received ack from broker");
+		}
+		logger.info("ACK received from broker");
+		try {
+			logger.info("Message published to partition : {} and Offset: {} ",brokerResponse.get().offset(),brokerResponse.get().partition());
+		} catch (InterruptedException|ExecutionException e) {
+			logger.error("Not able to publish message to kafka {}",e.getMessage());
 		}
 		logger.debug("closig producer");
 		producer.close();
