@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
  * @author Prakash
  *
  */
-public class BlockingKafkaProducer {
+public class SimpleKafkaProducer {
 	private static final Logger logger
-			= LoggerFactory.getLogger(BlockingKafkaProducer.class);
+			= LoggerFactory.getLogger(SimpleKafkaProducer.class);
     public static void main(String args[]) {
 		//SimpleProducer();
 		//ProducerWithResponse();
-		ProducerWithCallback();
+		NonBlockingProducerWithCallback();
     }
 
     public static void SimpleProducer(){
@@ -34,7 +34,7 @@ public class BlockingKafkaProducer {
 		logger.info("closig producer");
 		producer.close();
 	}
-	public static void ProducerWithResponse(){
+	public static void BlockingProducer(){
 		logger.info("Starting kafka producer");
 		Properties producerPros = new Properties();
 		producerPros.put("bootstrap.servers", "localhost:9092");
@@ -57,7 +57,7 @@ public class BlockingKafkaProducer {
 		producer.close();
 	}
 
-	public static void ProducerWithCallback(){
+	public static void NonBlockingProducerWithCallback(){
 		logger.info("Starting kafka producer");
 		Properties producerPros = new Properties();
 		producerPros.put("bootstrap.servers", "localhost:9092");
@@ -72,7 +72,7 @@ public class BlockingKafkaProducer {
 			@Override
 			public void onCompletion(RecordMetadata recordMetadata, Exception e) {
 				Logger logger
-						= LoggerFactory.getLogger(BlockingKafkaProducer.class);
+						= LoggerFactory.getLogger(SimpleKafkaProducer.class);
 				if(null==e) {
 					logger.info("Callback: Received ACK from broker");
 					logger.info("Callback: Message published to partition : {} and Offset: {} ", recordMetadata.offset(), recordMetadata.partition());
