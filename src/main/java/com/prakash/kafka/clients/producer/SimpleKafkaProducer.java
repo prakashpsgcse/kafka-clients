@@ -18,8 +18,8 @@ public class SimpleKafkaProducer {
 			= LoggerFactory.getLogger(SimpleKafkaProducer.class);
     public static void main(String args[]) {
 		//SimpleProducer();
-		//ProducerWithResponse();
-		NonBlockingProducerWithCallback();
+		BlockingProducer();
+		//NonBlockingProducerWithCallback();
     }
 
     public static void SimpleProducer(){

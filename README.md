@@ -24,3 +24,14 @@ Kafka clients basic concepts .Producer/Consumer sample codes
    * **`SimpleProducer()`** for sending data but not waiting for ACK from leader broker
    * **`BlockingProducer()`** for sending data and it will block current thread for response 
    * **`NonBlockingProducerWithCallback()`** this will register call back and process next req .Callback is executed when it get response
+   
+## Partitioner 
+ * when partition is provied use it 
+ * When key is provided use hash to get partition [key with same hash will be sent to same partition]
+ * Nothing then use Default prtitioner [Round robin]
+ 
+## Custom Partitioner
+ * We can have custom partitioner to implement our logic 
+ * lets say we want to send messages from Washington DC stores to partition 1 .Key format "partition-location"
+ * StorePartitioner trying to get partition from key .ex: 0-DC -> 0 partition DC->location 
+ * [StorePartitioner](src/main/java/com/prakash/kafka/clients/producer/StorePartitioner.java)
