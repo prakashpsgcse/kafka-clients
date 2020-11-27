@@ -13,6 +13,7 @@ public class StorePartitioner implements Partitioner {
     private String storeNumerSeperator;
     @Override
     public int partition(String topicName, Object key, byte[] keyInBytes, Object message, byte[] messageInBytes, Cluster cluster) {
+       logger.debug("Cluster MetaData constructed: {}",cluster);
         if(null!=key && key instanceof String){
            String messagekey=(String) key;
             String storePartition=messagekey.split(storeNumerSeperator)[0];

@@ -4,7 +4,7 @@ Kafka clients basic concepts .Producer/Consumer sample codes
 ## Basic concepts of kafka-clients
  * Very first step for producer/Consumer is connect to Cluster and get MetaData(broker Id,IP etc).
  * **_bootstrap.server_** config accepts LoadBalance/DNS/Broker IP's .This will be used for initial connections only.
- * Client connects to first IP and get brokers IP's in the cluster. 
+ * Client connects to first DNS/LB/IP and get brokers IP's in the cluster. 
  * Failed to connect with first DNS/LB/IP then it picks next one in list [never give 2 cluster's ip/dns : its not HA].
  * Second step is to get Topic Metadata (leader for partition etc).
  * Producer/Consumer always send/receive data to/from partition leader. 
@@ -26,12 +26,15 @@ Kafka clients basic concepts .Producer/Consumer sample codes
    * **`NonBlockingProducerWithCallback()`** this will register call back and process next req .Callback is executed when it get response
    
 ## Partitioner 
- * when partition is provied use it 
+ * When partition is provided use it 
  * When key is provided use hash to get partition [key with same hash will be sent to same partition]
- * Nothing then use Default prtitioner [Round robin]
+ * Nothing then use Default partitioner [Round robin]
  
 ## Custom Partitioner
  * We can have custom partitioner to implement our logic 
- * lets say we want to send messages from Washington DC stores to partition 1 .Key format "partition-location"
+ * Lets say we want to send messages from Washington DC stores to partition 1 .Key format "partition-location"
  * StorePartitioner trying to get partition from key .ex: 0-DC -> 0 partition DC->location 
  * [StorePartitioner](src/main/java/com/prakash/kafka/clients/producer/StorePartitioner.java)
+ 
+## Important/Useful Producer Configs
+ * 
