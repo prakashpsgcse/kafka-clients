@@ -25,7 +25,7 @@ public class SimpleKafkaProducer {
     public static void SimpleProducer(){
 		logger.info("Starting kafka producer");
 		Properties producerPros = new Properties();
-		producerPros.put("bootstrap.servers", "localhost:9092");
+		producerPros.put("bootstrap.servers", "192.168.43.126:9092");
 		producerPros.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		producerPros.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		Producer<String, String> producer = new KafkaProducer<>(producerPros);
@@ -37,7 +37,7 @@ public class SimpleKafkaProducer {
 	public static void BlockingProducer(){
 		logger.info("Starting kafka producer");
 		Properties producerPros = new Properties();
-		producerPros.put("bootstrap.servers", "localhost:9092");
+		producerPros.put("bootstrap.servers", "192.168.43.126:9092");
 		producerPros.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		producerPros.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		Producer<String, String> producer = new KafkaProducer<>(producerPros);
@@ -60,7 +60,7 @@ public class SimpleKafkaProducer {
 	public static void NonBlockingProducerWithCallback(){
 		logger.info("Starting kafka producer");
 		Properties producerPros = new Properties();
-		producerPros.put("bootstrap.servers", "localhost:9092");
+		producerPros.put("bootstrap.servers", "192.168.43.126:9092");
 		producerPros.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		producerPros.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		Producer<String, String> producer = new KafkaProducer<>(producerPros);
